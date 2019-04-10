@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        a {
+            margin: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div></div>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <script>
+
+        let div = document.createElement('div');
+        function page(opt) {
+            // if (!opt.el) {
+            //     return false;
+            // }
+            let div = document.querySelector("div");
+            let now = opt.now || 1;
+            let all = opt.all || 5;
+            if (now >= 4 && all >= 6) {
+                let a = document.createElement("a");
+                a.href = "#1";
+                a.innerHTML = "首页";
+                div.appendChild(a);
+            }
+            if (now >= 2) {
+                let a = document.createElement("a");
+                a.href = "#" + (now - 1);
+                a.innerHTML = "上一页";
+                div.appendChild(a);
+            }
+
+            if (all <= 5) {
+                for (let i = 0; i < all; i++) {
+                    let a = document.createElement("a");
+                    a.href = "#" + i;
+                    if (i === now) {
+                        a.innerHTML = i;
+                    } else {
+                        a.innerHTML = "[" + i + "]";
+                    }
+                    div.appendChild(a);
+                }
+            } else {
+                for (let i = 1; i <= 5; i++) {
+                    let a = document.createElement("a");
+
+                    if (now === 1 || now === 2) {
+                        a.href = "#" + i;
+                        if (now === i) {
+                            a.innerHTML = i;
+                        } else {
+                            a.innerHTML = "[" + i + "]";
+                        }
+                    } else if (all - now === 0 || all - now === 1) {
+                        a.href = "#" + (all - 5 + i);
+                        if (all - now === 0 && i === 5) {
+                            a.innerHTML = all - 5 + i;
+                        } else if (all - now === 1 && i === 4) {
+                            a.innerHTML = all - 5 + i;
+                        } else {
+                            a.innerHTML = "[" + (all - 5 + i) + "]";
+                        }
+                    } else {
+                        a.href = "#" + (now - 3 + i);
+                        if (i === 3) {
+                            a.innerHTML = now - 3 + i;
+                        } else {
+                            a.innerHTML = "[" + (now - 3 + i) + "]";
+                        }
+                    }
+                    div.appendChild(a);
+                }
+            }
+            if (all - now >= 1) {
+                let a = document.createElement("a");
+                a.href = "#" + (now + 1);
+                a.innerHTML = "下一页";
+                div.appendChild(a);
+            }
+
+            if (all - now >= 3 && all >= 6) {
+                let a = document.createElement("a");
+                a.href = "#" + all;
+                a.innerHTML = "尾页";
+                div.appendChild(a);
+            }
+            let oa = div.querySelectorAll('a');
+            for (let i = 0; i < oa.length; i++) {
+                oa[i].onclick = function () {
+                    div.innerHTML = "";
+                    var num = this.getAttribute("href").substring(1);
+                    page({
+                        now: parseInt(num),
+                        all: all
+                    });
+                }
+            }
+        }
+        page({
+            now: 7,
+            all: 10
+        });
+
+    </script>
+
+    <script>
+        function showPageCommon(config) {
+            return function (page, total) {
+                var str = '<a>' + page + '</a>';
+
+                for (var i = 1; i <= 3; i++) {
+                    if (page - i > 1) {
+                        str = '<a class="' + config.color + '">' + (page - i) + '</a> ' + str;
+                    }
+                    if (page + i < total) {
+                        str = str + ' ' + (page + i);
+                    }
+                }
+
+                if (page - 4 > 1) {
+                    str = '... ' + str;
+                }
+
+                if (page > 1) {
+                    str = '上一页 ' + 1 + ' ' + str;
+                }
+
+                if (page + 4 < total) {
+                    str = str + ' ...';
+                }
+
+                if (page < total) {
+                    str = str + ' ' + total + ' 下一页';
+                }
+
+                return str;
+            }
+        }
+
+        var showPages = showPageCommon({
+            color: 'red'
+        });
+
+        var total = 110;
+        // for (var i = 1; i <= total; i++) {
+        //     var ret = showPages(i, total);
+        //     console.log(ret);
+        // }
+        let ret = showPages(3, total);
+        console.log(ret);
+
+        // var showPages = showPageCommon({
+        //     color: 'blue'
+        // });
+
+        // function get_hs_page(cur_page, total_page) {
+        //     var result = "";
+        //     for (var i = 1; i <= total_page; i++) {
+        //         if (i == 2 && cur_page - 6 > 1) {
+        //             i = cur_page - 6;
+        //         } else if (i == cur_page + 6 && cur_page + 6 < total_page) {
+        //             i = total_page - 1;
+        //         } else {
+        //             if (i == cur_page) {
+        //                 result += "<li><a style='background-color:#e7e7e7;' href='/topic?page=" + i + "&type=hs'>" + i + "</a></li>";
+        //             } else {
+        //                 result += "<li><a href='/topic?page=" + i + "&type=hs'>" + i + "</a></li>";
+        //             }
+
+        //         }
+        //     }
+        //     return result;
+        // }
+
+        // document.querySelector(".pagination").innerHTML = get_hs_page(10, 100);
+        // var total = 110;
+        // for (var i = 1; i <= total; i++) {
+        //     var ret = showPages(i, total);
+        //     console.log(ret);
+        // }
+        // function showPage(page, total) {
+        //     var str = page; //首先记录传入的页码数字
+
+        //     for (var i = 1; i <= 3; i++) {
+
+        //         if (page - i > 1) { //判断所传页码之前添加的页码数
+        //             str = page - i + ' ' + str;
+        //         }
+
+        //         if (page + i < total) { //判断所传页码之后添加的页码数
+        //             str = str + ' ' + (page + i);
+        //         }
+        //         console.log(str, "str", page)
+        //         console.log(str, "str", "hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
+        //     }
+
+        //     // if (page - 3 > 1) { //判断页码左边是否添加'...'
+        //     //     str = '... ' + str;
+        //     // }
+
+        //     // if (page > 1) {
+        //     //     str = '上一页 ' + '1 ' + str;
+        //     // }
+
+        //     // if (page + 3 < total) {
+        //     //     str = str + '...';
+        //     // }
+
+        //     // if (page < total) {
+        //     //     str = str + ' ' + total + ' 下一页';
+        //     // }
+
+        //     return str;
+        // }
+        // var total = 110;
+        // for (var i = 1; i <= total; i++) {
+        //     var ret = showPage(i, total);
+        //     console.log(ret);
+        // }
+        // showPage(1, 110)
+    </script>
+    <!-- <script>
+        (function ($) {
+            var ms = {
+                init: function (totalsubpageTmep, args) {
+                    return (function () {
+                        ms.fillHtml(totalsubpageTmep, args);
+                        ms.bindEvent(totalsubpageTmep, args);
+                    })();
+                },
+                //填充html
+                fillHtml: function (totalsubpageTmep, args) {
+                    return (function () {
+                        totalsubpageTmep = "";
+                        // 页码大于等于4的时候，添加第一个页码元素
+                        if (args.currPage != 1 && args.currPage >= 4 && args.totalPage != 4) {
+                            totalsubpageTmep += "<li class='ali'><a href='javascript:void(0);' class='geraltTb_pager' data-go='' >" + 1 + "</a></li>";
+                        }
+                        /* 当前页码>4, 并且<=总页码，总页码>5，添加“···”*/
+                        if (args.currPage - 2 > 2 && args.currPage <= args.totalPage && args.totalPage > 5) {
+                            totalsubpageTmep += "<li class='ali'><a href='javascript:void(0);' class='geraltTb_' data-go='' >...</a></li>";
+                        }
+                        /* 当前页码的前两页 */
+                        var start = args.currPage - 2;
+                        /* 当前页码的后两页 */
+                        var end = args.currPage + 2;
+
+                        if ((start > 1 && args.currPage < 4) || args.currPage == 1) {
+                            end++;
+                        }
+                        if (args.currPage > args.totalPage - 4 && args.currPage >= args.totalPage) {
+                            start--;
+                        }
+                        for (; start <= end; start++) {
+                            if (start <= args.totalPage && start >= 1) {
+                                totalsubpageTmep += "<li class='ali'><a href='javascript:void(0);' class='geraltTb_pager' data-go='' >" + start + "</a></li>";
+                            }
+                        }
+                        if (args.currPage + 2 < args.totalPage - 1 && args.currPage >= 1 && args.totalPage > 5) {
+                            totalsubpageTmep += "<li class='ali'><a href='javascript:void(0);' class='geraltTb_' data-go='' >...</a></li>";
+                        }
+
+                        if (args.currPage != args.totalPage && args.currPage < args.totalPage - 2 && args.totalPage != 4) {
+                            totalsubpageTmep += "<li class='ali'><a href='javascript:void(0);' class='geraltTb_pager' data-go='' >" + args.totalPage + "</a></li>";
+                        }
+                        $(".pagination").html(totalsubpageTmep);
+                    })();
+                },
+                //绑定事件
+                bindEvent: function (totalsubpageTmep, args) {
+                    return (function () {
+                        totalsubpageTmep.on("click", "a.geraltTb_pager", function (event) {
+                            var current = parseInt($(this).text());
+                            ms.fillHtml(totalsubpageTmep, { "currPage": current, "totalPage": args.totalPage, "turndown": args.turndown });
+                            if (typeof (args.backFn) == "function") {
+                                args.backFn(current);
+                            }
+                        });
+                    })();
+                }
+            }
+            $.fn.createPage = function (options) {
+                ms.init(this, options);
+            }
+        })(jQuery);
+
+
+        $(function () {
+            $(".pagination").createPage({
+                totalPage: 30,
+                currPage: 14,
+                backFn: function (p) {
+                    console.log("回调函数：" + p);
+                }
+            });
+        })
+
+    </script> -->
+</body>
+
+</html>
