@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <style>
+        @font-face {
+            font-family: "iconfont";
+            /* project id 1113556 */
+            src: url("//at.alicdn.com/t/font_1113556_kokz8bv0nir.eot");
+            src: url("//at.alicdn.com/t/font_1113556_kokz8bv0nir.eot?#iefix") format("embedded-opentype"),
+                url("//at.alicdn.com/t/font_1113556_kokz8bv0nir.woff2") format("woff2"),
+                url("//at.alicdn.com/t/font_1113556_kokz8bv0nir.woff") format("woff"),
+                url("//at.alicdn.com/t/font_1113556_kokz8bv0nir.ttf") format("truetype"),
+                url("//at.alicdn.com/t/font_1113556_kokz8bv0nir.svg#iconfont") format("svg");
+        }
+
+        body,
+        div,
+        p,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        ol,
+        ul,
+        li,
+        dl,
+        dt,
+        dd,
+        th,
+        tr,
+        td,
+        hr,
+        caption,
+        table,
+        form,
+        img,
+        input,
+        legend,
+        fieldset {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        #box {
+            position: relative;
+            margin: 20px auto;
+            /* width: 800px; */
+            /* height: 490px; */
+            border: 1px solid #eee;
+            /* overflow: auto; */
+            /* overflow: hidden; */
+        }
+
+        li {
+            position: absolute;
+            /* width: 25%; */
+            /* height: 150px; */
+            /* line-height: 150px; */
+            text-align: center;
+            /* font-size: 40px; */
+            /* font-weight: bold; */
+            background: lawngreen;
+            border: 1px solid #eeffff;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        #box .active {
+            z-index: 1;
+            color: #fff;
+            background: blue;
+        }
+
+        .drag {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 10px;
+            height: 10px;
+            background: #333;
+            font-size: 12px;
+            color: #fff;
+            line-height: 30px;
+            text-align: center;
+            display: none;
+        }
+
+        .div_span {
+            display: flex;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .span {
+            flex: 1;
+            border: 1px solid #ccc;
+        }
+
+        table {
+            width: 800px;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            border-collapse: collapse;
+        }
+
+        td {
+            width: 20%;
+            text-align: center;
+            line-height: 50px;
+            height: 50px;
+        }
+
+        #test {
+            width: 600px;
+            margin: auto;
+            clear: both;
+            /* overflow: auto; */
+        }
+
+        .active {
+            background: #000;
+        }
+    </style>
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1113556_kokz8bv0nir.css">
+</head>
+
+<body>
+    <div id="test"></div>
+    <div>
+        sdfasdf
+    </div>
+    <script>
+        class Test {
+            constructor(m, n) {
+                this.rows = m || 4;
+                this.cols = n || 4;
+                this.arr = this.creatArr() || []
+                // this.arr = [
+                //     [[0, 0, 1, 1, 0, { "data": 0 }], [0, 1, 1, 2, 1, { "data": 1 }], [0, 2, 1, 1, 0, { "data": 2 }], [0, 3, 1, 1, 0, { "data": 3 }], [0, 4, 1, 1, 0, { "data": 4 }]],
+                //     [[1, 0, 1, 1, 0, { "data": 5 }], [1, 1, 0, 0, 1, { "data": 6 }], [1, 2, 1, 1, 0, { "data": 7 }], [1, 3, 1, 1, 0, { "data": 8 }], [1, 4, 1, 1, 0, { "data": 9 }]]
+                // ] || this.creatArr() || [];
+                // this.arr =
+                //     [[[0, 0, 1, 1, 0, { "data": 0 }], [0, 1, 2, 2, 1, { "data": 1 }], [0, 2, 0, 0, 0, { "data": 2 }], [0, 3, 1, 1, 0, { "data": 3 }], [0, 4, 1, 1, 0, { "data": 4 }]],
+                //     [[1, 0, 1, 1, 0, { "data": 5 }], [1, 1, 0, 0, 1, { "data": 6 }], [1, 2, 0, 0, 1, { "data": 7 }], [1, 3, 1, 1, 0, { "data": 8 }], [1, 4, 1, 1, 0, { "data": 9 }]],
+                //     [[2, 0, 1, 1, 0, { "data": "new10" }], [2, 1, 1, 1, 0, { "data": "new11" }], [2, 2, 1, 2, 0, { "data": "new12" }], [2, 3, 1, 1, 0, { "data": "new13" }], [2, 4, 1, 1, 0, { "data": "new14" }]], [[2, 0, 1, 1, 0, { "data": "new10" }], [2, 1, 1, 1, 0, { "data": "new11" }], [2, 2, 0, 0, 1, { "data": "new12" }], [2, 3, 1, 1, 0, { "data": "new13" }], [2, 4, 1, 1, 0, { "data": "new14" }]], [[2, 0, 1, 1, 0, { "data": "new10" }], [2, 1, 1, 1, 0, { "data": "new11" }], [2, 2, 1, 1, 0, { "data": "new12" }], [2, 3, 1, 1, 0, { "data": "new13" }], [2, 4, 1, 1, 0, { "data": "new14" }]]];
+                this.container = document.querySelector("div");
+            }
+            init() {
+                this.update();
+            }
+            getStyle(element, cssPropertyName) {
+                return window.getComputedStyle ? window.getComputedStyle(element)[cssPropertyName] : element.currentStyle[cssPropertyName];
+            }
+            update() {
+                this.container.innerHTML = "";
+                this.container.appendChild(this.creatList());
+                this.handler();
+            }
+            creatList() {
+                this.element = document.createElement("ul");
+                this.element.id = "box";
+                let k = 0;
+                let liWidth = this.getStyle(this.container, "width").match(/\d+/g) / this.cols;
+                // console.log(JSON.stringify(this.arr))
+                for (let i = 0; i < this.rows; i++) {
+                    for (let j = 0; j < this.arr[i].length; j++) {
+                        let li = document.createElement("li");
+                        let index = k++;
+
+                        if (this.arr[i][j][4]) {
+                            li.classList.add("active");
+                        }
+                        //数组中的参数依次为：0行，1列，2宽，3高，4是否占位,5存储的内容
+                        li.index = index;
+                        // li.style.zIndex = this.arr[i][j][3] * this.arr[i][j][2];
+                        li.style.width = liWidth * this.arr[i][j][2] + "px";
+                        li.style.height = liWidth * this.arr[i][j][3] + "px";
+                        if (this.arr[i][j][2] === 0) {
+                            li.style.border = "none";
+                        }
+
+                        li.style.left = liWidth * (index % this.cols) + "px";
+                        li.style.top = liWidth * Math.floor(index / this.cols) + "px";
+                        li.dataset.data = JSON.stringify(this.arr[i][j]);
+                        li.dataset.index = index;
+                        li.innerHTML = `
+                            <div>索引${index}---${JSON.stringify(this.arr[i][j][5])}</div>
+                            <div class="div_span">
+                                    <span class="span iadd iconfont">&#xe648;</span>
+                                    <span class="span iremove iconfont">&#xe64d;</span>
+                                    <span class="span ileft iconfont">&#xe602;</span>
+                                    <span class="span iright iconfont">&#xe600;</span>
+                                    <span class="span iup iconfont">&#xe61e;</span>
+                                    <span class="span idown iconfont">&#xe601;</span>
+                            <div>
+                            `;
+                        li.setAttribute("draggable", true);
+                        this.element.appendChild(li);
+                    }
+                }
+                return this.element;
+            }
+
+            creatArr() {
+                let arr = [];
+                let k = 0;
+                for (let i = 0; i < this.rows; i++) {
+                    arr[i] = [];
+                    for (let j = 0; j < this.cols; j++) {
+                        arr[i][j] = [i, j, 1, 1, 0, { data: k++ }];//数组中的参数依次为：0行，1列，2宽，3高，4是否占位,5存储的内容
+                    }
+                }
+                return arr;
+            }
+            flatten(arr) {
+                return ([].concat(...arr.map(x => Array.isArray(x) ? this.flatten(x) : x))).filter(item => !isNaN(item));
+            }
+            handler() {
+                this.element.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                    let index = e.target.parentNode.parentNode.index || 0;
+                    let rowIndex = Math.floor(index / this.cols) || 0;
+                    let colIndex = (index % this.cols) || 0;
+                    let w = this.arr[rowIndex][colIndex][2];
+                    let h = this.arr[rowIndex][colIndex][3];
+
+                    if (e.target.classList.contains("iadd")) {// 增加空行
+                        let newarr = [];
+                        //数组中的参数依次为：0行，1列，2宽，3高，4是否占位,5存储的内容
+                        for (let i = 0; i < this.cols; i++) {
+                            newarr[i] = [rowIndex + h, i, 1, 1, 0, { data: "new" + ((rowIndex + 1) * this.cols + i) }];
+                        }
+                        this.arr.splice(rowIndex + h, 0, newarr)
+                        this.rows++;
+                    } else if (e.target.classList.contains("iremove")) {// 删除空行
+                        // 当前行为rowIndex + h - 1， 最后一行为this.rows - 1
+                        if (rowIndex === this.rows - 1 || this.arr[rowIndex][colIndex][3] + rowIndex === this.rows || !this.arr[rowIndex + h].every(item => item[2] === 1) || !this.arr[rowIndex + h].every(item => item[3] === 1)) {
+                            alert("最后一行不允许删除");
+                        } else {
+                            this.arr.splice(rowIndex + h, 1) && this.rows--;
+                        }
+                    } else if (e.target.classList.contains("ileft")) {
+                        if (colIndex === 0 || w === 1) {
+                            alert("左边界不可拓展")
+                        } else {
+                            if (w > 1) {
+                                for (let i = 0; i < h; i++) {
+                                    this.arr[rowIndex + i][colIndex + w - 1][2] = 1;
+                                    this.arr[rowIndex + i][colIndex + w - 1][3] = 1;
+                                    this.arr[rowIndex + i][colIndex + w - 1][4] = 0;
+                                }
+                                this.arr[rowIndex][colIndex][2]--;
+
+                            } else {
+                                alert("当前格子高度为最小高度，不可向上缩小")
+                            }
+                        }
+
+                    } else if (e.target.classList.contains("iright")) {
+                        let flag = true;
+                        for (let i = 0; i < h; i++) {
+                            if ((this.cols === w + colIndex) || this.arr[rowIndex + i][colIndex + w][3] > 1) {
+                                alert("右边界无空行，不可拓展");
+                                flag = false;
+                                break;
+                            }
+                        }
+                        if (flag) {
+                            this.arr[rowIndex][colIndex][2] = this.arr[rowIndex][colIndex][2] + this.arr[rowIndex][colIndex + w][2];
+                            for (let i = 0; i < h; i++) {
+                                this.arr[rowIndex + i][colIndex + w][2] = 0;
+                                this.arr[rowIndex + i][colIndex + w][3] = 0;
+                                this.arr[rowIndex + i][colIndex + w][4] = this.arr[rowIndex][colIndex][4];
+                            }
+                        }
+
+                    } else if (e.target.classList.contains("iup")) {
+                        // if ((h > 1) && this.arr[rowIndex][colIndex][4] === 1) {
+                        if (h > 1) {
+                            for (let i = 0; i < w; i++) {
+                                this.arr[rowIndex + h - 1][colIndex + i][2] = 1;
+                                this.arr[rowIndex + h - 1][colIndex + i][3] = 1;
+                                this.arr[rowIndex + h - 1][colIndex + i][4] = 0;
+                            }
+                            this.arr[rowIndex][colIndex][3]--;
+                        } else {
+                            alert("当前格子高度为最小高度，不可向上缩小")
+                        }
+                    } else if (e.target.classList.contains("idown")) {
+                        // if (this.rows === h + rowIndex) {
+                        //     alert("下边界无空行，不可拓展");
+                        // } else {
+                        let flag = true;
+                        for (let i = 0; i < w; i++) {
+                            if ((this.rows === h + rowIndex) || this.arr[rowIndex + h][colIndex + i][2] > 1) {
+                                alert("下边界无空行，不可拓展");
+                                flag = false;
+                                break;
+                            }
+                        }
+                        if (flag) {
+                            this.arr[rowIndex][colIndex][3] = this.arr[rowIndex][colIndex][3] + this.arr[rowIndex + h][colIndex][3];
+                            for (let i = 0; i < w; i++) {
+                                this.arr[rowIndex + h][colIndex + i][2] = 0;
+                                this.arr[rowIndex + h][colIndex + i][3] = 0;
+                                // this.arr[rowIndex + h][colIndex + i][4] = 1;
+                                this.arr[rowIndex + h][colIndex + i][4] = this.arr[rowIndex][colIndex][4];
+                            }
+                            // this.arr[rowIndex][colIndex][3]++;
+                        }
+                    }
+                    this.update();
+                }, false);
+
+                /* 拖动目标元素时触发drag事件 */
+                this.element.addEventListener("drag", function (e) {
+
+                }, false);
+
+                this.element.addEventListener("dragstart", (e) => {
+                    // 保存拖动元素的引用(ref.)
+                    // let rowIndex = Math.floor(e.target.index / this.cols) || 0;
+                    e.dataTransfer.setData("text", e.target.index)
+                    // let colIndex = (e.target.index % this.cols) || 0;
+                    // event.dataTransfer.setData("Array", JSON.stringify(this.arr[rowIndex][colIndex], undefined, 2));
+                    // 使其半透明
+                    // event.target.style.opacity = .5;
+                }, false);
+
+                this.element.addEventListener("dragend", (e) => {
+                    // 重置透明度
+                    // event.target.style.opacity = "";
+                }, false);
+
+                /* 放置目标元素时触发事件 */
+                this.element.addEventListener("dragover", (e) => {
+                    // 阻止默认动作以启用drop
+                    e.preventDefault();
+                }, false);
+
+                this.element.addEventListener("dragenter", (e) => {
+                    // 当可拖动的元素进入可放置的目标时高亮目标节点
+                    // if (event.target.className == "dropzone") {
+                    //     event.target.style.background = "purple";
+                    // }
+
+                }, false);
+
+                document.addEventListener("dragleave", (e) => {
+                    // 当拖动元素离开可放置目标节点，重置其背景
+                    // if (event.target.className == "dropzone") {
+                    //     event.target.style.background = "";
+                    // }
+
+                }, false);
+
+                this.element.addEventListener("drop", (e) => {
+                    // 阻止默认动作（如打开一些元素的链接）
+                    e.preventDefault();
+                    e.stopPropagation();
+                    let index = e.dataTransfer.getData("text");
+                    let arr = JSON.parse(JSON.stringify(this.arr));
+                    let dragRowIndex = Math.floor(index / this.cols) || 0;
+                    let dragColIndex = (index % this.cols) || 0;
+                    let currentRowIndex = Math.floor(e.target.index / this.cols) || 0;
+                    let currentColIndex = (e.target.index % this.cols) || 0;
+                    let dragarr = arr[dragRowIndex][dragColIndex];
+                    let currentarr = arr[currentRowIndex][currentColIndex];
+                    if ((dragarr[2] === currentarr[2]) && (dragarr[3] === currentarr[3])) {
+                        this.arr[dragRowIndex][dragColIndex] = currentarr;
+                        this.arr[currentRowIndex][currentColIndex] = dragarr;
+                    }
+                    this.update();
+                }, false);
+            }
+        }
+        let test = new Test(2, 5);
+        test.init();
+    </script>
+</body>
+
+</html>
