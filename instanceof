@@ -1,0 +1,17 @@
+实现instanceof 
+
+
+
+function instanceof(L, R) {// L,R分别代表左右表达式
+		let O = R.prototype;// 取R的显示原型 
+		let l = L.__proto__;// 取L的隐式原型
+		while (true) {
+				if (l === null) {
+						return false;
+				}
+				if (l === O) {//当O显式原型严格等于L隐式原型时，返回true
+						return true;
+				}
+				l = l.__proto__;
+		}
+}
